@@ -1,0 +1,1 @@
+drop module folders (from Pypi, Github...) in the lib folder.
