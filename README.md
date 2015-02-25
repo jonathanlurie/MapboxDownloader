@@ -5,3 +5,5 @@ A tool to download big maps using a Mapbox Studio skins
 
 ## TODO
 - Doc
+- clean code
+- clean TileMerger
