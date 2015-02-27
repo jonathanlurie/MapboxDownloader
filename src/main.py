@@ -200,7 +200,7 @@ if __name__ == '__main__':
     # finally export the whole map in PNG format
     finalName = outputFolder + "/" + getDateFilename() + ".png"
 
-    print("\nSaving final image ... "),
+    print("\nSaving final image ... ")
     outputImage.save(finalName, "PNG")
 
     print("Final image available at:\n" + finalName + "\n")
