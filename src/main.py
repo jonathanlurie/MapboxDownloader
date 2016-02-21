@@ -17,6 +17,8 @@ import urllib2
 import os
 import datetime
 import sys
+import time
+import shutil
 
 from SettingFileReader import *
 from PIL import Image
@@ -96,9 +98,14 @@ if __name__ == '__main__':
 
     # get other param
     resolution =  settings.getSetting("image", "resolutionFactor")
-    skin = settings.getSetting("image", "skin")
+    originalSkin = settings.getSetting("image", "skin")
     zoom = settings.getSetting("image", "zoom")
 
+    abspath = os.path.abspath(os.path.dirname(__file__)) + "/../"
+    skin = abspath + "temp/" + os.path.basename(originalSkin)[0:-4] + "_" + str(int(time.time())) + ".tm2"
+
+    print("creating temporary copy of tm2 skin...")
+    shutil.copytree(originalSkin, skin)
 
     # get files and folder
     temporaryFolder = settings.getSetting("files", "temporaryFolder")
@@ -144,6 +151,7 @@ if __name__ == '__main__':
 
             tempUrl = "http://localhost:3000/static/" + str(zoom) + "/" + str(tempWest) + "," + str(tempSouth) + "," + str(tempEast) + "," + str(tempNorth) + "@" + str(resolution) + "x.png?id=tmstyle://" + skin
 
+            print tempUrl
 
             # define a local name for the tile
             localTileAddress = temporaryFolder + "/" + str(tileCounter) + ".png"
@@ -169,7 +177,7 @@ if __name__ == '__main__':
 
             # checking tile size
             if(tempTile.size[0] != tileWidth or tempTile.size[1] != tileHeight):
-                print("[WARNING] tile size is different: " + str(abs(tempTile.size[0] - tileWidth)) + "px in width and " +  str(abs(tempTile.size[1] - tileHeight)) + "px over height.")
+                print("\t[WARNING] tile size is different: " + str(abs(tempTile.size[0] - tileWidth)) + "px in width and " +  str(abs(tempTile.size[1] - tileHeight)) + "px over height.")
                 numberOfWarnings = numberOfWarnings + 1
 
             # paste the fresh tile content to the output image
@@ -202,5 +210,8 @@ if __name__ == '__main__':
 
     print("\nSaving final image ... ")
     outputImage.save(finalName, "PNG")
+
+    print("deleting temporary data...")
+    shutil.rmtree(skin)
 
     print("Final image available at:\n" + finalName + "\n")
